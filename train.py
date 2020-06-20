@@ -79,8 +79,6 @@ if __name__ == '__main__':
     dataset = args.dataset
     valnum = get_indexNum(config, index, "val")
     testnum = get_indexNum(config, index, "test")
-    # print('valnum', valnum)
-    # print('testnum', testnum)
 
     train_dataset = IQADataset(dataset, config, index, "train")
     train_loader = torch.utils.data.DataLoader(train_dataset,
@@ -108,15 +106,12 @@ if __name__ == '__main__':
         for i, (patches, label) in enumerate(train_loader):
             patches = patches.to(device)
             label = label.to(device)
-            # print('patches', patches.size())  # [128, 1, 32, 32]
-            # print('label', label.size())  # [128, 1]
 
             optimizer.zero_grad()
             outputs = model(patches)
 
-            # print('outputs', outputs.size())#[128, 1]
             loss = criterion(outputs, label)
-            # print('loss', loss)
+
             loss.backward()
             optimizer.step()
             LOSS = LOSS + loss.item()
@@ -132,26 +127,16 @@ if __name__ == '__main__':
                 y_val[i] = label.item()
                 patches = patches.to(device)
                 label = label.to(device)
-                # print('patches', patches.size())  # torch.Size([1, 1, 32, 32])
-                # print('label', label.size())#torch.Size([1, 1])
                 outputs = model(patches)
-                # print('outputs', outputs.size())#torch.Size([1, 1])
                 score = outputs.mean()
-                # print('score', score)
                 y_pred[i] = score
                 loss = criterion(score, label[0])
                 L = L + loss.item()
         val_loss = L / (i+1)
-        # print('y_pred', y_pred) #4
-        # print('y_val', y_val) #4
         val_SROCC = stats.spearmanr(y_pred, y_val)[0]
-        # print('val_SROCC', val_SROCC)
         val_PLCC = stats.pearsonr(y_pred, y_val)[0]
-        # print('val_PLCC', val_PLCC)
         val_KROCC = stats.stats.kendalltau(y_pred, y_val)[0]
-        # print('val_KROCC', val_KROCC)
         val_RMSE = np.sqrt(((y_pred-y_val)**2).mean())
-        # print('val_RMSE', val_RMSE)
 
         #test
         y_pred = np.zeros(testnum)
@@ -162,24 +147,16 @@ if __name__ == '__main__':
                 y_test[i] = label.item()
                 patches = patches.to(device)
                 label = label.to(device)
-                # print('patches', patches.size())  # torch.Size([1, 345, 1, 32, 32])
-                # print('label', label.size())#torch.Size([1, 1])
                 outputs = model(patches)
-                # print('outputs', outputs.size())#torch.Size([1, 1])
                 score = outputs.mean()
-                # print('score', score)
                 y_pred[i] = score
                 loss = criterion(score, label[0])
                 L = L + loss.item()
         test_loss = L / (i+1)
         SROCC = stats.spearmanr(y_pred, y_test)[0]
-        # print('val_SROCC', val_SROCC)
         PLCC = stats.pearsonr(y_pred, y_test)[0]
-        # print('val_PLCC', val_PLCC)
         KROCC = stats.stats.kendalltau(y_pred, y_test)[0]
-        # print('val_KROCC', val_KROCC)
         RMSE = np.sqrt(((y_pred - y_test) ** 2).mean())
-        # print('val_RMSE', val_RMSE)
 
         print("Epoch {} Valid Results: loss={:.3f} SROCC={:.3f} PLCC={:.3f} KROCC={:.3f} RMSE={:.3f}".format(epoch,
                                                                                          val_loss,
@@ -220,24 +197,16 @@ if __name__ == '__main__':
             y_test[i] = label.item()
             patches = patches.to(device)
             label = label.to(device)
-            # print('patches', patches.size())  # torch.Size([1, 345, 1, 32, 32])
-            # print('label', label.size())#torch.Size([1, 1])
             outputs = model(patches)
-            # print('outputs', outputs.size())#torch.Size([1, 1])
             score = outputs.mean()
-            # print('score', score)
             y_pred[i] = score
             loss = criterion(score, label[0])
             L = L + loss.item()
     test_loss = L / (i + 1)
     SROCC = stats.spearmanr(y_pred, y_test)[0]
-    # print('val_SROCC', val_SROCC)
     PLCC = stats.pearsonr(y_pred, y_test)[0]
-    # print('val_PLCC', val_PLCC)
     KROCC = stats.stats.kendalltau(y_pred, y_test)[0]
-    # print('val_KROCC', val_KROCC)
     RMSE = np.sqrt(((y_pred - y_test) ** 2).mean())
-    # print('val_RMSE', val_RMSE)
     print("Final test Results: loss={:.3f} SROCC={:.3f} PLCC={:.3f} KROCC={:.3f} RMSE={:.3f}".format(test_loss,
                                                                            SROCC,
                                                                            PLCC,
