@@ -7,5 +7,10 @@ This training progress only support on LIVE II database now, the training progre
 # Train
 `python train.py`
 
+# TODO
+* Cross dataset test code will be published
+* Train on different distortion types on LIVE, TID2013, CSIQ will be published
+* Code of evaluations on Waterloo Exploration Database (D-test, L-test, P-test and gMAd competition) will be published
+
 # Thanks
 This code is based on the changes of Dingquan Li 
