@@ -7,5 +7,5 @@ This training progress only support on LIVE II database now, the training progre
 # Train
 `python train.py`
 
-
-
+# Thanks
+This code is based on the changes of Dingquan Li 
